@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+   <!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <!-- <package name="user" namespace="/" extends="struts-global">
+        <action name="UserAction_*" method="{1}" class="cn.itcast.sh.action.UserAction">
+            <result name="userList">/user/list.jsp</result>
+        </action>
+    </package> -->
+</struts>

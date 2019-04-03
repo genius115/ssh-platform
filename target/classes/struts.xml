@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+	<!-- 默认访问页面 -->
+	<package name="default" extends="struts-default" namespace="/">
+		<default-action-ref name="default" />
+		<action name="default">
+			<result>/WEB-INF/view/index.jsp</result>
+		</action>
+	</package>
+
+	<!-- 商品相关请求转发 -->
+	<!-- Struts2在2.5版本后添加strict-method-invocation(严格方法访问)，默认为true，不能使用动态方法调用功能，故需设为false -->
+	<package name="product" extends="struts-default" namespace="/"	strict-method-invocation="false">
+		<!-- 捕获action抛出的异常 -->
+		<!-- <global-results>
+            <result name="error">/error.html</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+        </global-exception-mappings> -->
+        
+        <interceptors>
+            <!-- 声明拦截器 -->
+            <interceptor name="errorInterceptor" class="org.ssh.interceptor.ErrorInterceptor" />
+            <!-- 配置拦截器栈 -->
+            <interceptor-stack name="myErrorInterceptor">
+                <interceptor-ref name="defaultStack" />
+                <interceptor-ref name="errorInterceptor" />
+            </interceptor-stack>
+        </interceptors>
+        <!-- 覆盖底层的拦截器栈 对包中的所有action都有效 -->
+        <default-interceptor-ref name="myErrorInterceptor" />
+        <global-results>
+            <result name="errorMsg">WEB-INF/view/error.jsp</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping result="errorMsg" exception="java.lang.Exception"></exception-mapping>
+        </global-exception-mappings>
+        
+		<!-- 保存商品 -->
+		<action name="product_*" class="productAction" method="{1}Product">			
+			<result>WEB-INF/view/index.jsp</result>
+			<result name="input">WEB-INF/view/index.jsp</result>
+		</action>
+	</package>
+	
+	<package name="phone" extends="struts-default" namespace="/"	strict-method-invocation="false">
+		<!-- <interceptors>
+            声明拦截器
+            <interceptor name="errorInterceptor" class="org.ssh.interceptor.ErrorInterceptor" />
+            配置拦截器栈
+            <interceptor-stack name="myErrorInterceptor">
+                <interceptor-ref name="defaultStack" />
+                <interceptor-ref name="errorInterceptor" />
+            </interceptor-stack>
+        </interceptors>
+        覆盖底层的拦截器栈 对包中的所有action都有效
+        <default-interceptor-ref name="myErrorInterceptor" /> -->
+        
+        <!-- 以下拦截器为ModelDriver配置 
+		其中params拦截器负责提取请求的参数，如果是使用的属性驱动模式，它还负责将请求参数传给Action实例的属性；
+		而model-driven拦截器则负责把请求参数传给模型的属性。 -->
+		<interceptors>
+	       <!--定义属性驱动的拦截器-->
+	       <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
+	       <!--定义模型驱动的拦截器-->
+		   <interceptor name="model-driven"  class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor" />
+			       
+	       <!--定义模型驱动的拦截器栈-->
+	       <interceptor-stack name="modelDrivenStack">
+	              <interceptor-ref name="model-driven"/>
+	              <interceptor-ref name="basicStack"/>
+	       </interceptor-stack>
+	       <interceptor-stack name="defaultStack">
+	              <interceptor-ref name="model-driven"/>
+	              <interceptor-ref name="params"/>
+	       </interceptor-stack>
+		</interceptors>
+		<!--定义Struts2默认的拦截器栈-->
+		<default-interceptor-ref name="defaultStack" />        
+        
+        
+        <global-results>
+            <result name="errorMsg">WEB-INF/view/error.jsp</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping result="errorMsg" exception="java.lang.Exception"></exception-mapping>
+        </global-exception-mappings>	
+	</package>
+
+	<!-- 引入资源文件 -->
+	<constant name="struts.custom.i18n.resources" value="messageResource"></constant>
+	
+	<!-- 
+	<constant name="struts.devMode" value="true" />
+    <constant name="struts.enable.DynamicMethodInvocation" value="false"></constant>
+	
+	Struts异常处理机制
+	配置属性的顺序问题
+	result-types?,interceptors?,default-interceptor- ref?,default-action-ref?,default-class-ref?,
+	global-results?,global-exception-mappings?,action*
+	
+	<package name="struts-global" extends="struts-default" namespace="/">
+	 	  内层结果字符串无法匹配的，最后会在此匹配
+	      <global-results>
+	          配置框架异常后匹配的结果字符串，给出异常处理页面路径
+	          <result name="errHandler" type="chain">
+	          	<param name="actionName">errorProcessor</param>
+	          </result>
+	      </global-results>
+	      action未处理的异常会上抛给框架
+	      <global-exception-mappings>
+	          exception，配置框架可捕获的异常，可直接来个Exception，什么都可以捕   errHandler，框架返回的结果字符串  
+	          <exception-mapping exception="java.lang.Exception" result="errHandler" />
+	      </global-exception-mappings>	      
+		 
+	      <action name="errorProcessor" class="org.ssh.exception.ErrorProcess">
+             <result>WEB-INF/error.jsp</result>
+          </action>
+	</package>
+	 -->
+	<!-- struts的其他配置文件 -->
+	<include file="struts-product.xml"></include>
+</struts>
