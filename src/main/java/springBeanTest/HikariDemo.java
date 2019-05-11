@@ -29,6 +29,7 @@ public class HikariDemo {
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
  
+        
         HikariDataSource ds = new HikariDataSource(hikariConfig);
         Connection conn = null;
         Statement statement = null;
