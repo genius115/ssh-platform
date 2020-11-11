@@ -74,8 +74,6 @@ spring-hibernate配置文件
 		<property name="configLocations">
 			<list>
 				<value>classpath:auth-Config.xml</value>
-			
-				<value>classpath:yysd-Config.xml</value>
 			</list> 
 		</property>
 		<property name="dataSource" ref="dataSource"/>
