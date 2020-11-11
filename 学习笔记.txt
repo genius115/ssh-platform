@@ -69,6 +69,7 @@ spring-hibernate配置文件
 		</property>
 	</bean>
 
+
 	<!-- IBATIS配置 -->  
 	<bean id="sqlMapClient"  class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">  
 		<property name="configLocations">
